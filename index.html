@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Portfolio</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: sans-serif;
+        background: #111;
+        color: #fff;
+      }
+      nav {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        background: #222;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        margin: 0 10px;
+      }
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        height: 80vh;
+      }
+      img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+      }
+      button {
+        padding: 10px 20px;
+        border: none;
+        background: #00adb5;
+        color: #fff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div>MyPortfolio</div>
+      <div>
+        <a href="#">Home</a>
+        <a href="projects.html">Projects</a>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div>
+        <h1>Hello, I'm Krushna</h1>
+        <p>I am a web developer</p>
+        <button onclick="hire()">Hire Me</button>
+      </div>
+
+      <img
+        src="Screenshot_2026-03-23-13-36-57-61_99c04817c0de5652397fc8b56c3b3817.jpg (1).jpeg"
+      />
+    </div>
+
+    <script>
+      function hire() {
+        let email = prompt("Enter your email:");
+        if (email) alert("Thank you! I will contact you.");
+      }
+    </script>
+  </body>
+</html>

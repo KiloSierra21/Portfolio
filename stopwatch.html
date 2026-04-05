@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stopwatch</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #1a1a2e;
+        color: #eee;
+        font-family: sans-serif;
+        flex-direction: column;
+        gap: 20px;
+      }
+      #time {
+        font-size: 3rem;
+        font-variant-numeric: tabular-nums;
+      }
+      .btns {
+        display: flex;
+        gap: 10px;
+      }
+      button {
+        padding: 8px 20px;
+        border: none;
+        border-radius: 6px;
+        font-size: 1rem;
+        cursor: pointer;
+        color: #fff;
+        background: #e94560;
+      }
+      button:nth-child(2) {
+        background: #0f3460;
+      }
+      button:nth-child(3) {
+        background: #533483;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="time">00:00:00</div>
+    <div class="btns">
+      <button onclick="start()">Start</button>
+      <button onclick="pause()">Pause</button>
+      <button onclick="reset()">Reset</button>
+    </div>
+    <script>
+      let s = 0,
+        iv = null;
+      function fmt(t) {
+        const h = String(Math.floor(t / 3600)).padStart(2, "0");
+        const m = String(Math.floor((t % 3600) / 60)).padStart(2, "0");
+        const sc = String(t % 60).padStart(2, "0");
+        return h + ":" + m + ":" + sc;
+      }
+      function start() {
+        if (!iv)
+          iv = setInterval(() => {
+            s++;
+            document.getElementById("time").textContent = fmt(s);
+          }, 1000);
+      }
+      function pause() {
+        clearInterval(iv);
+        iv = null;
+      }
+      function reset() {
+        pause();
+        s = 0;
+        document.getElementById("time").textContent = fmt(0);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #1a1a2e;
+        color: #e0e0e0;
+      }
+      .app {
+        background: #16213e;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 340px;
+        text-align: center;
+      }
+      h1 {
+        margin-bottom: 1rem;
+        color: #fff;
+      }
+      input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 6px;
+        background: #0f3460;
+        color: #fff;
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+      input::placeholder {
+        color: #888;
+      }
+      button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        background: #e94560;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #c73652;
+      }
+      #error {
+        color: #e94560;
+        margin-top: 12px;
+      }
+      #result {
+        margin-top: 16px;
+        text-align: left;
+        background: #0f3460;
+        border-radius: 8px;
+        padding: 16px;
+        display: none;
+      }
+      #result h2 {
+        color: #fff;
+        margin-bottom: 8px;
+      }
+      #result p {
+        margin: 4px 0;
+        color: #ccc;
+      }
+      .key-section {
+        margin-bottom: 12px;
+      }
+      .key-section input {
+        margin-bottom: 6px;
+      }
+      .key-section button {
+        background: #533483;
+        margin-bottom: 4px;
+      }
+      .key-section button:hover {
+        background: #3f2768;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <h1>🌤 Weather</h1>
+      <div class="key-section" id="keySection">
+        <input id="apiKey" placeholder="OpenWeather API key" type="password" />
+        <button onclick="saveKey()">Save Key</button>
+        <p style="font-size: 12px; color: #888; margin-top: 4px">
+          Free at
+          <a
+            href="https://openweathermap.org/api"
+            target="_blank"
+            style="color: #e94560"
+            >openweathermap.org</a
+          >
+        </p>
+      </div>
+      <input id="city" placeholder="Enter city name" />
+      <button onclick="getWeather()">Search</button>
+      <p id="error"></p>
+      <div id="result">
+        <h2 id="rCity"></h2>
+        <p id="rTemp"></p>
+        <p id="rCond"></p>
+        <p id="rHum"></p>
+      </div>
+    </div>
+    <script>
+      const keyInput = document.getElementById("apiKey");
+      const keySection = document.getElementById("keySection");
+      const saved = localStorage.getItem("ow_key");
+      if (saved) {
+        keySection.style.display = "none";
+      }
+
+      function saveKey() {
+        const k = keyInput.value.trim();
+        if (k) {
+          localStorage.setItem("ow_key", k);
+          keySection.style.display = "none";
+        }
+      }
+
+      async function getWeather() {
+        const city = document.getElementById("city").value.trim();
+        const err = document.getElementById("error");
+        const box = document.getElementById("result");
+        err.textContent = "";
+        box.style.display = "none";
+        if (!city) {
+          err.textContent = "Please enter a city.";
+          return;
+        }
+        const key = localStorage.getItem("ow_key");
+        if (!key) {
+          err.textContent = "Please save your API key first.";
+          keySection.style.display = "block";
+          return;
+        }
+        try {
+          const r = await fetch(
+            "https://api.openweathermap.org/data/2.5/weather?q=" +
+              encodeURIComponent(city) +
+              "&appid=" +
+              key +
+              "&units=metric",
+          );
+          if (!r.ok)
+            throw new Error(
+              r.status === 404
+                ? "City not found."
+                : "API error (check your key).",
+            );
+          const d = await r.json();
+          document.getElementById("rCity").textContent =
+            d.name + ", " + d.sys.country;
+          document.getElementById("rTemp").textContent =
+            "🌡 " +
+            Math.round(d.main.temp) +
+            "°C (feels like " +
+            Math.round(d.main.feels_like) +
+            "°C)";
+          document.getElementById("rCond").textContent =
+            "☁ " + d.weather[0].main + " — " + d.weather[0].description;
+          document.getElementById("rHum").textContent =
+            "💧 Humidity: " + d.main.humidity + "%";
+          box.style.display = "block";
+        } catch (e) {
+          err.textContent = e.message;
+        }
+      }
+
+      document.getElementById("city").addEventListener("keydown", function (e) {
+        if (e.key === "Enter") getWeather();
+      });
+    </script>
+  </body>
+</html>
+<!-- 904e826a5ad05d93f92bbec477ec1000 -->
